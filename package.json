@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "ts-node-dev ./src/index.ts"
+    "start": "ts-node-dev ./src/index.ts",
+    "knex:rollback-all": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback --all",
+    "knex:rollback": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:rollback",
+    "knex:migrate": "knex --knexfile ./src/server/database/knex/Environment.ts migrate:latest",
+    "knex:seed": "knex --knexfile ./src/server/database/knex/Environment.ts seed:run",
+    "postinstall": "tsc"
   },
   "repository": {
     "type": "git",
@@ -47,3 +52,4 @@
     "typescript": "^5.4.5"
   }
 }
+
