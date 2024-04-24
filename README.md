@@ -6,7 +6,6 @@
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Execução do Backend](#execução-do-backend)
 - [Execução dos Testes](#execução-dos-testes)
-- [Observações](#observações)
 
 ## Funcionalidades Principais
 
