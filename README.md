@@ -28,7 +28,7 @@
   - **Routes:** Define as rotas da API e vincula as requisições HTTP aos controllers.
   - **Database:** Pasta responsável pelo acesso ao banco de dados.
     - **Knex:** Configuração e inicialização do Knex.
-    - **Migrations:** Migrations para controle de versão do banco de dados.
+    - **Migrations:** Migrations para controle das tabelas.
     - **Models:** Representam as entidades do sistema.
     - **Providers:** Provedores de serviços relacionados ao banco de dados.
   - **Shared:** Pasta contendo componentes compartilhados.
@@ -59,6 +59,6 @@
 
   ## Desenvolvedores
 
-| [<img src="https://avatars.githubusercontent.com/paolaarruee?v=4" width=115><br><sub>Paola Arrueé</sub>](https://github.com/paolaarruee) |
+| [<img src="https://avatars.githubusercontent.com/paolaarruee?v=4" width=115>](https://github.com/paolaarruee) |
 | :---: |
 | [Paola Arrueé](https://github.com/paolaarruee) |
