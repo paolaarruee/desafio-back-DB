@@ -1,5 +1,9 @@
 # Backend para Gerenciador de Sessões de Votação
 
+<p align="center">
+   <img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=RED&style=for-the-badge" #vitrinedev/>
+</p>
+
 - [Funcionalidades Principais](#funcionalidades-principais)
 - [Funcionalidades Bônus](#funcionalidades-bônus)
 - [Arquitetura e Estrutura do Projeto](#arquitetura-e-estrutura-do-projeto)
