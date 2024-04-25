@@ -9,12 +9,13 @@ import { PautasProvider } from "../../database/providers/Pautas";
 interface IParamProps {
   id?: number;
 }
-interface IBodyProps extends Omit<IPauta, "id"> {}
+interface IBodyProps extends Omit<IPauta, "id" | "votos"> {}
 
 export const updateByIdValidation = validation((getSchema) => ({
   body: getSchema<IBodyProps>(
     yup.object().shape({
-      nome: yup.string().required().min(3),
+      titulo: yup.string().required().min(3).max(150),
+      descricao: yup.string().required().min(10).max(300),
     })
   ),
   params: getSchema<IParamProps>(
@@ -36,14 +37,12 @@ export const updateById = async (
     });
   }
 
-  const result = await PautasProvider.updateById(req.params.id, req.body);
-  if (result instanceof Error) {
+  const pauta = await PautasProvider.updateById(req.params.id, req.body);
+  if (pauta instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      errors: {
-        default: result.message,
-      },
+      error: { default: "Pauta não encontrada" },
     });
   }
 
-  return res.status(StatusCodes.NO_CONTENT).json(result);
+  return res.status(StatusCodes.NO_CONTENT).json(pauta);
 };

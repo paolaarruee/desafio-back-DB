@@ -1,20 +1,20 @@
-import { ETableNames } from '../../ETableNames';
-import { IPauta } from '../../models';
-import { Knex } from '../../knex';
+import { ETableNames } from "../../ETableNames";
+import { IPauta } from "../../models";
+import { Knex } from "../../knex";
 
-
-export const getById = async (id: number): Promise<IPauta | Error> => {
+export const getById = async (id: number): Promise<IPauta | null | Error> => {
   try {
     const result = await Knex(ETableNames.pauta)
-      .select('*')
-      .where('id', '=', id)
+      .select("*")
+      .where("id", "=", id)
       .first();
 
     if (result) return result;
 
-    return new Error('Registro não encontrado');
+    console.log("Registro não encontrado");
+    return null;
   } catch (error) {
-    console.log(error);
-    return new Error('Erro ao consultar o registro');
+    console.error("Erro ao consultar o registro:", error);
+    return new Error("Erro ao consultar o registro");
   }
 };

@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { StatusCodes } from "http-status-codes";
 
-import { PautasController } from "./../controllers";
+import { PautasController,SessoesController} from "./../controllers";
+
 
 const router = Router();
 
@@ -34,6 +34,12 @@ router.delete(
   "/pauta/:id",
   PautasController.deleteByIdValidation,
   PautasController.deleteById
+);
+
+router.post(
+  "/sessao/:pautaId",
+  SessoesController.createValidation,
+  SessoesController.create
 );
 
 export { router };

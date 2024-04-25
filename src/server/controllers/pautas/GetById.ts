@@ -23,14 +23,12 @@ export const getById = async (req: Request<IParamProps>, res: Response) => {
       }
     });
   }
-  const result = await PautasProvider.getById(req.params.id);
-  if (result instanceof Error) {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      errors: {
-        default: result.message
-      }
+  const pauta = await PautasProvider.getById(req.params.id);
+  if (!pauta) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      error: "Pauta não encontrada",
     });
   }
 
-  return res.status(StatusCodes.OK).json(result);
+  return res.status(StatusCodes.OK).json(pauta);
 };

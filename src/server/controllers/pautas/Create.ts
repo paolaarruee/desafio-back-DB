@@ -1,18 +1,20 @@
-import { Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import * as yup from 'yup';
+import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import * as yup from "yup";
 
-import { PautasProvider } from '../../database/providers/Pautas';
-import { validation } from '../../shared/middlewares';
-import { IPauta } from '../../database/models';
+import { PautasProvider } from "../../database/providers/Pautas";
+import { validation } from "../../shared/middlewares";
+import { IPauta } from "../../database/models";
 
-
-interface IBodyProps extends Omit<IPauta, 'id'> { }
+interface IBodyProps extends Omit<IPauta, "id" | "votos"> {};
 
 export const createValidation = validation((getSchema) => ({
-  body: getSchema<IBodyProps>(yup.object().shape({
-    nome: yup.string().required().min(3).max(150),
-  })),
+  body: getSchema<IBodyProps>(
+    yup.object().shape({
+      titulo: yup.string().required().min(3).max(150),
+      descricao: yup.string().required().min(10).max(300),
+    })
+  ),
 }));
 
 export const create = async (req: Request<{}, {}, IPauta>, res: Response) => {
@@ -21,8 +23,8 @@ export const create = async (req: Request<{}, {}, IPauta>, res: Response) => {
   if (result instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       errors: {
-        default: result.message
-      }
+        default: result.message,
+      },
     });
   }
 

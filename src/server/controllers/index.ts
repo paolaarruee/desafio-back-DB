@@ -1,1 +1,2 @@
-export * from './pautas';
+export * from './sessaoVotacao';
+export * from './pautas'

@@ -25,12 +25,10 @@ export const deleteById = async (req: Request<IParamProps>, res: Response) => {
     });
   }
 
-  const result = await PautasProvider.deleteById(req.params.id);
-  if (result instanceof Error) {
+  const pauta = await PautasProvider.deleteById(req.params.id);
+  if (pauta instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      errors: {
-        default: result.message,
-      },
+      error: { default: "Pauta não encontrada" },
     });
   }
 

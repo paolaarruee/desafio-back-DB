@@ -1,3 +1,5 @@
 export enum ETableNames {
-  pauta = 'pauta'
+  pauta = "pauta",
+  sessaoVotacao = "sessao",
+  votos = "votos",
 }

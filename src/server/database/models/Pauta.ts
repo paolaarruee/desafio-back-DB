@@ -1,6 +1,8 @@
+import { IVoto } from "./Voto";
 
-
-export interface IPauta{
-  id:number;
-  nome:string;
+export interface IPauta {
+  id: number;
+  titulo: string;
+  descricao: string;
+  votos?: IVoto[];
 }
