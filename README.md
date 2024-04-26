@@ -42,7 +42,7 @@
 
 - **Node.js:** Plataforma de desenvolvimento para construção de aplicações server-side utilizando JavaScript.
 - **Express:** Framework web para Node.js que simplifica a criação de APIs RESTful.
-- **Knex.js:** Um construtor de consultas SQL para Node.js que suporta vários bancos de dados, incluindo SQLite3.
+- **Knex.js:** Um construtor de consultas SQL para Node.js que suporta vários bancos de dados, incluindo MYSQL2.
 - **MYSQL2:** Um banco de dados SQL para salvar os dados mesmo com o restart da aplicação.
 - **Jest:** Framework de teste usado para testar os endpoints e regras de negócio da API
 - **Yup:** Biblioteca de validação de esquemas JavaScript para garantir a integridade dos dados.

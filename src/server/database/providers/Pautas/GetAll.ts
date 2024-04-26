@@ -8,8 +8,11 @@ export const getAll = async (
   filter: string,
   id = 0
 ): Promise<IPauta[] | Error> => {
+  if (isNaN(id)) {
+    id = 0;
+  }
+
   try {
-    console.log(id);
     const result = await Knex(ETableNames.pauta)
       .select("*")
       .where("id", Number(id))
