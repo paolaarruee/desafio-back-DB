@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import * as yup from "yup";
-import { PautasProvider } from "../../database/providers/Pautas";
 import { SessaoVotacaoProvider } from "../../database/providers/SessaoVotacao";
 import { ISessaoDeVotacao, IVoto } from "../../database/models";
 import { validation } from "../../shared/middlewares";
@@ -9,12 +8,9 @@ import { VotosProvider } from "../../database/providers/Votos";
 
 interface IBodyProps extends Omit<IVoto, "id" | "sessaoId"> {}
 
-//userId: string;
-
 export const createValidation = validation((getSchema) => ({
   body: getSchema<IBodyProps>(
     yup.object().shape({
-      sessaoId: yup.number().required(),
       opcao: yup.string().required(),
     })
   ),
@@ -35,10 +31,22 @@ export const create = async (
       });
     }
 
-    if (parseInt(sessaoId) !== body.sessaoId) {
+    if (!("dataTermino" in sessao)) {
       return res.status(StatusCodes.BAD_REQUEST).json({
-        error:
-          "O SessãoId na URL não corresponde ao SessãoId no corpo da solicitação",
+        error: "A sessão de votação não possui data de término definida.",
+      });
+    }
+
+    if (sessao.dataTermino === undefined) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: "A sessão de votação não possui data de término definida.",
+      });
+    }
+
+    const agora = new Date();
+    if (agora > sessao.dataTermino) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: "A sessão de votação já expirou e não pode mais receber votos.",
       });
     }
 
@@ -49,21 +57,42 @@ export const create = async (
 
     const result = await VotosProvider.create(newBody);
 
-    if (true) {
-      console.log("aaa");
-      const updatedSessao = await SessaoVotacaoProvider.updateById(
-        parseInt(sessaoId),
-        {
-          votos: 1,
-        } as Omit<ISessaoDeVotacao, "id" | "duracaoMinutos">
+    if (result) {
+      const currentSession = await SessaoVotacaoProvider.getById(
+        parseInt(sessaoId)
       );
-      console.log("aaa222");
-      return res.status(StatusCodes.CREATED).json(result) && updatedSessao;
+
+      if (
+        currentSession &&
+        "votos" in currentSession &&
+        currentSession.votos !== undefined
+      ) {
+        const updatedVotos = (currentSession.votos ?? 0) + 1;
+
+        const updatedSessao = await SessaoVotacaoProvider.updateById(
+          parseInt(sessaoId),
+          {
+            votos: updatedVotos,
+          } as Omit<ISessaoDeVotacao, "id" | "duracaoMinutos">
+        );
+
+        return res.status(StatusCodes.CREATED).json(result) && updatedSessao;
+      } else {
+        console.error("Sessão não encontrada ou votos não estão definidos.");
+        return res.status(StatusCodes.NOT_FOUND).json({
+          error: "Sessão não encontrada ou votos não estão definidos.",
+        });
+      }
+    } else {
+      console.error("Resultado não encontrado.");
+      return res.status(StatusCodes.NOT_FOUND).json({
+        error: "Resultado não encontrado.",
+      });
     }
   } catch (error) {
-    console.error("Erro ao cadastrar o voto:", error);
+    console.error("Erro ao criar voto:", error);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      error: "Erro ao cadastrar o voto",
+      error: "Erro ao criar voto",
     });
   }
 };

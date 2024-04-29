@@ -3,32 +3,24 @@ import { ETableNames } from "../ETableNames";
 
 export async function up(knex: Knex) {
   return knex.schema
+
     .createTable(ETableNames.sessaoVotacao, (table) => {
-      table.bigIncrements("id").primary().comment("Chave primária da sessão");
+      table.bigIncrements("id").primary();
       table
         .bigInteger("pautaId")
         .unsigned()
         .notNullable()
         .references("id")
-        .inTable(ETableNames.pauta)
-        .comment("Chave estrangeira para a pauta");
-      table
-        .timestamp("dataInicio")
-        .notNullable()
-        .comment("Data de início da sessão");
-      table.integer("votos").notNullable().comment("Número de votos");
-      table
-        .integer("duracaoMinutos")
-        .notNullable()
-        .comment("Duração da sessão em minutos");
+        .inTable(ETableNames.pauta);
 
-      table.string("nomeSessao").notNullable().comment("Nome da sessão");
+      table.timestamp("dataInicio").notNullable();
 
-      table
-        .foreign("pautaId")
-        .references("id")
-        .inTable(ETableNames.pauta)
-        .onDelete("CASCADE");
+      table.timestamp("dataTermino").notNullable();
+
+      table.integer("votos").notNullable();
+      table.integer("duracaoMinutos").notNullable();
+
+      table.string("nomeSessao").notNullable();
 
       table.comment(
         "Tabela usada para armazenar as sessões das pautas no sistema."

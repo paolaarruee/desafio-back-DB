@@ -7,17 +7,25 @@ import { ISessaoDeVotacao } from "../../database/models";
 import { validation } from "../../shared/middlewares";
 
 interface IBodyProps
-  extends Omit<ISessaoDeVotacao, "id" | "votos" | "duracaoMinutos"> {}
+  extends Omit<
+    ISessaoDeVotacao,
+    "id" | "votos" | "duracaoMinutos" | "dataTermino"
+  > {}
 
-export const createValidation = validation((getSchema) => ({
-  body: getSchema<IBodyProps>(
+export const createValidation = validation((getSchema) => {
+  const bodySchema = getSchema<IBodyProps>(
     yup.object().shape({
       pautaId: yup.number().required(),
-      dataInicio: yup.date().required(),
       nomeSessao: yup.string().required(),
+      dataInicio: yup
+        .date()
+        .default(() => new Date())
+        .required(),
     })
-  ),
-}));
+  );
+
+  return { body: bodySchema };
+});
 
 export const create = async (
   req: Request<{ pautaId: string }, {}, ISessaoDeVotacao>,
@@ -41,12 +49,17 @@ export const create = async (
       });
     }
 
-    const newBody = {
-      ...body,
-      duracaoMinutos: body.duracaoMinutos || 1,
-    };
+    const duracaoMinutos = body.duracaoMinutos || 1;
+    const dataInicio = body.dataInicio ? new Date(body.dataInicio) : new Date();
+    const dataTermino = new Date(dataInicio.getTime() + duracaoMinutos * 60000);
 
-    const sessaoData = { ...newBody, pautaId: parseInt(pautaId) };
+    const sessaoData: ISessaoDeVotacao = {
+      ...body,
+      pautaId: parseInt(pautaId),
+      duracaoMinutos: duracaoMinutos,
+      dataTermino: dataTermino,
+      votos: 0,
+    };
 
     const result = await SessaoVotacaoProvider.create(sessaoData);
 

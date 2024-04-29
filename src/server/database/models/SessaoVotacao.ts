@@ -7,4 +7,5 @@ export interface ISessaoDeVotacao {
   dataInicio: Date;
   duracaoMinutos?: number;
   votos?: number;
+  dataTermino?: Date;
 }
