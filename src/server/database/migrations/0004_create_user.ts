@@ -5,10 +5,10 @@ export async function up(knex: Knex) {
   return knex.schema
     .createTable(ETableNames.usuarios, (table) => {
       table.bigIncrements("id").primary();
-      table.string("cpf").notNullable().unique().checkLength(">", 11);
+      table.string("cpf").notNullable().unique().checkLength(">", 10);
       table.string("nome").notNullable().checkLength(">", 3);
       table.string("senha").notNullable().checkLength(">", 6);
-      table.string("email").index().notNullable().unique().checkLength(">", 5);
+      table.string("email").notNullable().unique().checkLength(">", 5);
       table.boolean("admin").notNullable();
       table.comment("Tabela usada para armazenar os usuários no sistema.");
     })

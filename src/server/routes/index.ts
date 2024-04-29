@@ -1,13 +1,18 @@
 import { Router } from "express";
 
-import { PautasController, SessoesController } from "./../controllers";
-import { VotosController } from "../controllers/votos";
+import {
+  PautasController,
+  SessoesController,
+  VotosController,
+  UsuariosController,
+} from "./../controllers";
 
 const router = Router();
 
 router.get("/", (_, res) => {
   return res.send();
 });
+
 //routes pautas
 
 router.get(
@@ -79,10 +84,38 @@ router.post(
   VotosController.create
 );
 
+router.get("/votos", VotosController.getAllValidation, VotosController.getAll);
+
+//routes usuarios
+
 router.get(
-  "/votos",
-  VotosController.getAllValidation,
-  VotosController.getAll
+  "/usuarios",
+  UsuariosController.getAllValidation,
+  UsuariosController.getAll
+);
+
+router.post(
+  "/usuario",
+  UsuariosController.createValidation,
+  UsuariosController.create
+);
+
+router.get(
+  "/usuario/:id",
+  UsuariosController.getByIdValidation,
+  UsuariosController.getById
+);
+
+router.put(
+  "/usuario/:id",
+  UsuariosController.updateByIdValidation,
+  UsuariosController.updateById
+);
+
+router.delete(
+  "/usuario/:id",
+  UsuariosController.deleteByIdValidation,
+  UsuariosController.deleteById
 );
 
 export { router };
