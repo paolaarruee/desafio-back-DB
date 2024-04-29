@@ -9,6 +9,8 @@ export async function up(knex: Knex) {
         .bigInteger("sessaoId")
         .unsigned()
         .notNullable()
+        .references("id")
+        .inTable(ETableNames.sessaoVotacao)
         .comment("Chave estrangeira para a Sessão ID");
       table.string("opcao").notNullable().comment("opcao voto");
       table.comment("Tabela usada para armazenar os votos no sistema.");

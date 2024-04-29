@@ -9,15 +9,14 @@ export async function up(knex: Knex) {
         .bigInteger("pautaId")
         .unsigned()
         .notNullable()
+        .references("id")
+        .inTable(ETableNames.pauta)
         .comment("Chave estrangeira para a pauta");
       table
         .timestamp("dataInicio")
         .notNullable()
         .comment("Data de início da sessão");
-      table
-        .integer("votos")
-        .notNullable()
-        .comment("Número de votos");
+      table.integer("votos").notNullable().comment("Número de votos");
       table
         .integer("duracaoMinutos")
         .notNullable()
