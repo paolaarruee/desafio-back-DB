@@ -1,9 +1,10 @@
-import { IPauta, ISessaoDeVotacao} from "../../models";
+import { IPauta, ISessaoDeVotacao, IVoto } from "../../models";
 
 declare module "knex/types/tables" {
   interface Tables {
     pauta: IPauta;
     sessao: ISessaoDeVotacao;
-    // usuario: IUsuario
+    votos: IVoto;
+    usuario: IUsuario;
   }
 }

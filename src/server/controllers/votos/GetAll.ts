@@ -4,6 +4,7 @@ import * as yup from "yup";
 
 import { validation } from "../../shared/middlewares";
 import { SessaoVotacaoProvider } from "../../database/providers/SessaoVotacao";
+import { VotosProvider } from "../../database/providers/Votos";
 
 interface IQueryProps {
   id?: number;
@@ -28,13 +29,13 @@ export const getAll = async (
   res: Response
 ) => {
   let id = Number(req.query.id);
-  const result = await SessaoVotacaoProvider.getAll(
+  const result = await VotosProvider.getAll(
     req.query.page || 1,
     req.query.limit || 7,
     req.query.filter || "",
     Number(req.query.id)
   );
-  const count = await SessaoVotacaoProvider.count(req.query.filter);
+  const count = await VotosProvider.count(req.query.filter);
 
   if (result instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

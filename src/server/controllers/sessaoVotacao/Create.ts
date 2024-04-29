@@ -14,6 +14,7 @@ export const createValidation = validation((getSchema) => ({
     yup.object().shape({
       pautaId: yup.number().required(),
       dataInicio: yup.date().required(),
+      nomeSessao: yup.string().required(),
     })
   ),
 }));

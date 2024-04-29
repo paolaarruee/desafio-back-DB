@@ -17,12 +17,13 @@ export async function up(knex: Knex) {
       table
         .integer("votos")
         .notNullable()
-        .defaultTo(0)
         .comment("Número de votos");
       table
         .integer("duracaoMinutos")
         .notNullable()
         .comment("Duração da sessão em minutos");
+
+      table.string("nomeSessao").notNullable().comment("Nome da sessão");
 
       table
         .foreign("pautaId")
