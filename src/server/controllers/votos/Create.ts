@@ -5,6 +5,8 @@ import { SessaoVotacaoProvider } from "../../database/providers/SessaoVotacao";
 import { ISessaoDeVotacao, IVoto } from "../../database/models";
 import { validation } from "../../shared/middlewares";
 import { VotosProvider } from "../../database/providers/Votos";
+import { UsuariosProvider } from "../../database/providers/User";
+import { JWTService } from "../../shared/services";
 
 interface IBodyProps extends Omit<IVoto, "id" | "sessaoId" | "userCpf"> {}
 
@@ -16,6 +18,24 @@ export const createValidation = validation((getSchema) => ({
   ),
 }));
 
+const hasUserVotedInSession = async (
+  sessaoId: number,
+  userCpf: string
+): Promise<boolean | Error> => {
+  try {
+    const votos = await VotosProvider.getByCpf(userCpf);
+
+    if (!Array.isArray(votos)) {
+      throw new Error("Erro ao recuperar os votos do usuário");
+    }
+
+    return votos.some((voto) => voto.sessaoId === sessaoId);
+  } catch (error) {
+    console.error("Erro ao verificar se o usuário já votou na sessão:", error);
+    return new Error("Erro ao verificar se o usuário já votou na sessão");
+  }
+};
+
 export const create = async (
   req: Request<{ sessaoId: string }, {}, IVoto>,
   res: Response
@@ -24,6 +44,28 @@ export const create = async (
   const { body } = req;
 
   try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        error: "Token de autenticação não fornecido.",
+      });
+    }
+
+    const jwtData = JWTService.verify(token);
+    if (jwtData === "JWT_SECRET_NOT_FOUND" || jwtData === "INVALID_TOKEN") {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        error: "Token inválido.",
+      });
+    }
+
+    const userCpf = jwtData.cpf;
+    const hasVoted = await hasUserVotedInSession(parseInt(sessaoId), userCpf);
+    if (hasVoted) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: "Você já votou nesta sessão.",
+      });
+    }
+
     const sessao = await SessaoVotacaoProvider.getById(parseInt(sessaoId));
     if (!sessao) {
       return res.status(StatusCodes.NOT_FOUND).json({
@@ -53,6 +95,7 @@ export const create = async (
     const newBody = {
       ...body,
       sessaoId: parseInt(sessaoId),
+      userCpf: userCpf,
     };
 
     const result = await VotosProvider.create(newBody);

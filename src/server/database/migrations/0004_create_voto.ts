@@ -12,12 +12,14 @@ export async function up(knex: Knex) {
         .references("id")
         .inTable(ETableNames.sessaoVotacao);
 
-      table
-        .bigInteger("userCpf")
-        .unsigned()
+        table
+        .string("userCpf")
         .notNullable()
         .references("cpf")
-        .inTable(ETableNames.usuarios);
+        .inTable("usuarios")
+        .onDelete("CASCADE") 
+        .onUpdate("CASCADE");
+
       table.string("opcao").notNullable();
       table.comment("Tabela usada para armazenar os votos no sistema.");
     })

@@ -44,7 +44,11 @@ export const signIn = async (
       },
     });
   } else {
-    const accessToken = JWTService.sign({ uid: usuario.id });
+    const accessToken = JWTService.sign({
+      uid: usuario.id,
+      cpf: usuario.cpf,
+      admin: usuario.admin,
+    });
     if (accessToken === "JWT_SECRET_NOT_FOUND") {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         errors: {

@@ -3,7 +3,6 @@ import { StatusCodes } from "http-status-codes";
 import * as yup from "yup";
 
 import { validation } from "../../shared/middlewares";
-import { SessaoVotacaoProvider } from "../../database/providers/SessaoVotacao";
 import { VotosProvider } from "../../database/providers/Votos";
 
 interface IQueryProps {
