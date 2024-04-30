@@ -6,7 +6,7 @@ import {
   VotosController,
   UsuariosController,
 } from "./../controllers";
-import { ensureAuthenticated } from "../shared/middlewares";
+import { ensureAuthenticated, verifyAdmin } from "../shared/middlewares";
 
 const router = Router();
 
@@ -26,6 +26,7 @@ router.get(
 router.post(
   "/pauta",
   ensureAuthenticated,
+  verifyAdmin,
   PautasController.createValidation,
   PautasController.create
 );
@@ -33,6 +34,7 @@ router.post(
 router.get(
   "/pauta/:id",
   ensureAuthenticated,
+  verifyAdmin,
   PautasController.getByIdValidation,
   PautasController.getById
 );
@@ -68,6 +70,7 @@ router.get(
 
 router.put(
   "/sessao/:id",
+  verifyAdmin,
   ensureAuthenticated,
   SessoesController.updateByIdValidation,
   SessoesController.updateById
@@ -76,6 +79,7 @@ router.put(
 router.delete(
   "/sessao/:id",
   ensureAuthenticated,
+  verifyAdmin,
   SessoesController.deleteByIdValidation,
   SessoesController.deleteById
 );
@@ -83,6 +87,7 @@ router.delete(
 router.post(
   "/sessao/:pautaId",
   ensureAuthenticated,
+  verifyAdmin,
   SessoesController.createValidation,
   SessoesController.create
 );

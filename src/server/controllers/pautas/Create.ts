@@ -6,7 +6,7 @@ import { PautasProvider } from "../../database/providers/Pautas";
 import { validation } from "../../shared/middlewares";
 import { IPauta } from "../../database/models";
 
-interface IBodyProps extends Omit<IPauta, "id" | "votos"> {};
+interface IBodyProps extends Omit<IPauta, "id" | "votos"> {}
 
 export const createValidation = validation((getSchema) => ({
   body: getSchema<IBodyProps>(
