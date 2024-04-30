@@ -95,15 +95,21 @@ router.get(
 );
 
 router.post(
-  "/usuario",
+  "/cadastrar",
   UsuariosController.createValidation,
   UsuariosController.create
 );
 
+router.post(
+  "/entrar",
+  UsuariosController.signIn,
+  UsuariosController.create
+);
+
 router.get(
-  "/usuario/:id",
-  UsuariosController.getByIdValidation,
-  UsuariosController.getById
+  "/usuario/:cpf",
+  UsuariosController.getByCpfValidation,
+  UsuariosController.getByCpf
 );
 
 router.put(

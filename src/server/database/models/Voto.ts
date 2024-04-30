@@ -1,6 +1,6 @@
 export interface IVoto {
   id: number;
   sessaoId: number;
-  //userId: string;
+  userCpf: string;
   opcao: string;
 }

@@ -6,7 +6,7 @@ import { ISessaoDeVotacao, IVoto } from "../../database/models";
 import { validation } from "../../shared/middlewares";
 import { VotosProvider } from "../../database/providers/Votos";
 
-interface IBodyProps extends Omit<IVoto, "id" | "sessaoId"> {}
+interface IBodyProps extends Omit<IVoto, "id" | "sessaoId" | "userCpf"> {}
 
 export const createValidation = validation((getSchema) => ({
   body: getSchema<IBodyProps>(

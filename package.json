@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/paolaarruee/desafio-back-DB#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "http-status-codes": "^2.3.0",
@@ -35,6 +36,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.0.2",
     "@eslint/js": "^9.0.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.21",
     "@types/http-status-codes": "^1.2.0",
     "@types/jest": "^29.5.12",

@@ -6,25 +6,25 @@ import { validation } from "../../shared/middlewares";
 import { UsuariosProvider } from "../../database/providers/User";
 
 interface IParamProps {
-  id?: number;
+  cpf?: string;
 }
-export const getByIdValidation = validation((getSchema) => ({
+export const getByCpfValidation = validation((getSchema) => ({
   params: getSchema<IParamProps>(
     yup.object().shape({
-      id: yup.number().integer().required().moreThan(0),
+      cpf: yup.string().required(),
     })
   ),
 }));
 
-export const getById = async (req: Request<IParamProps>, res: Response) => {
-  if (!req.params.id) {
+export const getByCpf = async (req: Request<IParamProps>, res: Response) => {
+  if (!req.params.cpf) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       errors: {
-        default: 'O parâmetro "id" precisa ser informado.',
+        default: 'O parâmetro "CPF" precisa ser informado.',
       },
     });
   }
-  const usuario = await UsuariosProvider.getById(req.params.id);
+  const usuario = await UsuariosProvider.getByCpf(req.params.cpf);
   if (!usuario) {
     return res.status(StatusCodes.NOT_FOUND).json({
       error: "Usuário não encontrado",
