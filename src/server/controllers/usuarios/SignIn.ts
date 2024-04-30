@@ -5,6 +5,7 @@ import * as yup from "yup";
 import { UsuariosProvider } from "../../database/providers/User";
 import { validation } from "../../shared/middlewares";
 import { Iuser } from "../../database/models";
+import { JWTService, PasswordCrypto } from "../../shared/services";
 
 interface IBodyProps extends Omit<Iuser, "id" | "nome" | "admin" | "email"> {}
 
@@ -23,25 +24,35 @@ export const signIn = async (
 ) => {
   const { cpf, senha } = req.body;
 
-  const result = await UsuariosProvider.getByCpf(cpf);
-
-  if (result instanceof Error) {
+  const usuario = await UsuariosProvider.getByCpf(cpf);
+  if (usuario instanceof Error) {
     return res.status(StatusCodes.UNAUTHORIZED).json({
       errors: {
-        default: "CPF ou senha são inválidos",
+        default: "Email ou senha são inválidos",
       },
     });
   }
 
-  if (senha !== result.senha) {
+  const passwordMatch = await PasswordCrypto.verifyPassword(
+    senha,
+    usuario.senha
+  );
+  if (!passwordMatch) {
     return res.status(StatusCodes.UNAUTHORIZED).json({
       errors: {
-        default: "CPF ou senha são inválidos",
+        default: "Email ou senha são inválidos",
       },
     });
   } else {
-    return res
-      .status(StatusCodes.OK)
-      .json({ accessToken: "teste.teste.teste" });
+    const accessToken = JWTService.sign({ uid: usuario.id });
+    if (accessToken === "JWT_SECRET_NOT_FOUND") {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        errors: {
+          default: "Erro ao gerar o token de acesso",
+        },
+      });
+    }
+
+    return res.status(StatusCodes.OK).json({ accessToken });
   }
 };
