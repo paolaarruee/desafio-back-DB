@@ -1,8 +1,5 @@
 # Backend para Gerenciador de Sessões de Votação
 
-<p align="center">
-   <img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=RED&style=for-the-badge" #vitrinedev/>
-</p>
 
 - [Funcionalidades Principais](#funcionalidades-principais)
 - [Funcionalidades Bônus](#funcionalidades-bônus)
@@ -46,6 +43,7 @@
 - **MYSQL2:** Um banco de dados SQL para salvar os dados mesmo com o restart da aplicação.
 - **Jest:** Framework de teste usado para testar os endpoints e regras de negócio da API
 - **Yup:** Biblioteca de validação de esquemas JavaScript para garantir a integridade dos dados.
+- **Sqlite:** Banco de dados em memoria usado para os testes.
 
 ## Execução do Backend
 
