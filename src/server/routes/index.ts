@@ -42,6 +42,7 @@ router.get(
 router.put(
   "/pauta/:id",
   ensureAuthenticated,
+  verifyAdmin,
   PautasController.updateByIdValidation,
   PautasController.updateById
 );
@@ -112,6 +113,7 @@ router.get(
 
 router.get(
   "/usuarios",
+  ensureAuthenticated,
   UsuariosController.getAllValidation,
   UsuariosController.getAll
 );
@@ -126,18 +128,21 @@ router.post("/entrar", UsuariosController.signIn, UsuariosController.create);
 
 router.get(
   "/usuario/:cpf",
+  ensureAuthenticated,
   UsuariosController.getByCpfValidation,
   UsuariosController.getByCpf
 );
 
 router.put(
   "/usuario/:id",
+  ensureAuthenticated,
   UsuariosController.updateByIdValidation,
   UsuariosController.updateById
 );
 
 router.delete(
   "/usuario/:id",
+  ensureAuthenticated,
   UsuariosController.deleteByIdValidation,
   UsuariosController.deleteById
 );

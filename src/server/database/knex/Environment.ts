@@ -1,22 +1,6 @@
 import knex, { Knex } from "knex";
 import path from "path";
 
-export const development: Knex.Config = {
-  client: "mysql2",
-  connection: {
-    host: "127.0.0.1",
-    user: "root",
-    password: "root",
-    database: "gerenciadorVotacao",
-  },
-  migrations: {
-    directory: path.resolve(__dirname, "..", "migrations"),
-  },
-  seeds: {
-    directory: path.resolve(__dirname, "..", "seeds"),
-  },
-};
-
 async function createDatabase() {
   const knexInstance = knex({
     client: "mysql2",
@@ -38,3 +22,38 @@ async function createDatabase() {
   }
 }
 createDatabase();
+
+export const development: Knex.Config = {
+  client: "mysql2",
+  connection: {
+    host: "127.0.0.1",
+    user: "root",
+    password: "root",
+    database: "gerenciadorVotacao",
+  },
+  migrations: {
+    directory: path.resolve(__dirname, "..", "migrations"),
+  },
+  seeds: {
+    directory: path.resolve(__dirname, "..", "seeds"),
+  },
+};
+
+
+export const test: Knex.Config = {
+  client: 'sqlite3',
+  useNullAsDefault: true,
+  connection: ':memory:',
+  migrations: {
+    directory: path.resolve(__dirname, '..', 'migrations'),
+  },
+  seeds: {
+    directory: path.resolve(__dirname, '..', 'seeds'),
+  },
+  pool: {
+    afterCreate: (connection: any, done: Function) => {
+      connection.run('PRAGMA foreign_keys = ON');
+      done();
+    }
+  }
+};

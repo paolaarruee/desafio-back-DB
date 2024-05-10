@@ -31,5 +31,5 @@ export const getByCpf = async (req: Request<IParamProps>, res: Response) => {
     });
   }
 
-  return res.status(StatusCodes.OK).json(usuario);
+  return res.status(StatusCodes.OK).json(req.body);
 };

@@ -44,5 +44,5 @@ export const updateById = async (
     });
   }
 
-  return res.status(StatusCodes.NO_CONTENT).json(pauta);
+  return res.status(StatusCodes.NO_CONTENT).json(req.body);
 };
