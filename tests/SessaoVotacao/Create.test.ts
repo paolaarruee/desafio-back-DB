@@ -4,24 +4,60 @@ import { create } from "../../src/server/controllers/sessaoVotacao/Create";
 import { PautasProvider } from "../../src/server/database/providers/Pautas";
 import { SessaoVotacaoProvider } from "../../src/server/database/providers/SessaoVotacao";
 import { testServer } from "../jest.setup";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 describe("create", () => {
-  const mockToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIsImNwZiI6IjExMTExMTExMTExIiwiYWRtaW4iOjEsImlhdCI6MTcxNTMwODc0OSwiZXhwIjoxNzE1Mzk1MTQ5fQ.LSmYoBgBgRjIBVpCKgTYmgHTOJWqMyU3B_E0_z-yesI";
+  function generateSecretKey() {
+    return crypto.randomBytes(32).toString("hex");
+  }
+
+  
+function generateToken(user: { id: number; cpf: string; nome: string; admin: boolean }) {
+  const payload = {
+    uid: user.id,
+    cpf: user.cpf,
+    nome: user.nome,
+    admin: user.admin, 
+  };
+
+  return jwt.sign(payload, "suaChaveSecreta"); 
+}
+
+
+const adminUser = {
+  id: 1,
+  cpf: "11111111111",
+  nome: "Admin",
+  admin: true, 
+};
+
+const tokenAdmin = generateToken(adminUser);
+
+
+const regularUser = {
+  id: 2,
+  cpf: "22222222222",
+  nome: "Usuário Regular",
+  admin: false, 
+};
+
+const tokenRegularUser = generateToken(regularUser);
   it("deve retornar CREATED se a sessão de votação for criada com sucesso", async () => {
     const createPauta = await testServer
       .post("/pauta")
-      .set("Authorization", `Bearer ${mockToken}`)
+      .set("Authorization", `Bearer ${tokenAdmin}`)
       .send({
         titulo: "Pauta 01",
         descricao: "Pauta 01 descricao",
       });
+    console.log(`Bearer ${tokenAdmin}`);
 
     expect(createPauta.statusCode).toEqual(StatusCodes.CREATED);
 
     const criasessao = await testServer
       .post(`/sessao/1`)
-      .set({ Authorization: `Bearer ${mockToken}` })
+      .set({ Authorization: `Bearer ${tokenAdmin}` })
       .send({
         pautaId: 1,
         dataInicio: "2024-05-10 03:11:00",

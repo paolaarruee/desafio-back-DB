@@ -3,12 +3,12 @@ import { ISessaoDeVotacao } from "../../models";
 import { Knex } from "../../knex";
 
 export const getById = async (
-  id: number
+  pautaId: number
 ): Promise<ISessaoDeVotacao | null | Error> => {
   try {
     const result = await Knex(ETableNames.sessaoVotacao)
       .select("*")
-      .where("id", "=", id)
+      .where("pautaId", "=", pautaId)
       .first();
 
     if (result) return result;

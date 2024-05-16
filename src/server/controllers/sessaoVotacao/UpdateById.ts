@@ -8,7 +8,7 @@ import { ISessaoDeVotacao } from "../../database/models";
 import { SessaoVotacaoProvider } from "../../database/providers/SessaoVotacao";
 
 interface IParamProps {
-  id?: number;
+  pautaId?: number;
 }
 interface IBodyProps
   extends Omit<ISessaoDeVotacao, "dataTermino" | "id" | "votos"> {}
@@ -24,7 +24,7 @@ export const updateByIdValidation = validation((getSchema) => ({
   ),
   params: getSchema<IParamProps>(
     yup.object().shape({
-      id: yup.number().integer().required().moreThan(0),
+      pautaId: yup.number().integer().required().moreThan(0),
     })
   ),
 }));
@@ -33,7 +33,7 @@ export const updateById = async (
   req: Request<IParamProps, {}, IBodyProps>,
   res: Response
 ) => {
-  if (!req.params.id) {
+  if (!req.params.pautaId) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       errors: {
         default: 'O parâmetro "id" precisa ser informado.',
@@ -42,7 +42,7 @@ export const updateById = async (
   }
 
   try {
-    const existingSessao = await SessaoVotacaoProvider.getById(req.params.id);
+    const existingSessao = await SessaoVotacaoProvider.getById(req.params.pautaId);
 
     if (existingSessao === null) {
       return res.status(StatusCodes.NOT_FOUND).json({
@@ -75,7 +75,7 @@ export const updateById = async (
     }
 
     const updatedSessao = await SessaoVotacaoProvider.updateById(
-      req.params.id,
+      req.params.pautaId,
       {
         ...req.body,
         duracaoMinutos: duracaoMinutos,

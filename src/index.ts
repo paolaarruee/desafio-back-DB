@@ -1,5 +1,14 @@
-import { Knex } from './server/database/knex';
-import { server } from './server/Server';
+import cors from "cors";
+import { Knex } from "./server/database/knex";
+import { server } from "./server/Server";
+
+server.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 const startServer = () => {
   server.listen(process.env.PORT || 3333, () => {
@@ -7,8 +16,9 @@ const startServer = () => {
   });
 };
 
-if (process.env.IS_LOCALHOST !== 'true') {
-  Knex.migrate.latest()
+if (process.env.IS_LOCALHOST !== "true") {
+  Knex.migrate
+    .latest()
     .then(() => {
       startServer();
     })

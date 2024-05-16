@@ -3,13 +3,13 @@ import { ISessaoDeVotacao } from "../../models";
 import { Knex } from "../../knex";
 
 export const updateById = async (
-  id: number,
+  pautaId: number,
   sessao: Omit<ISessaoDeVotacao, "id">
 ): Promise<void | Error> => {
   try {
     const result = await Knex(ETableNames.sessaoVotacao)
       .update(sessao)
-      .where("id", "=", id);
+      .where("pautaId", "=", pautaId);
 
     if (result > 0) return;
     

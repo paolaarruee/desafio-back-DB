@@ -6,7 +6,7 @@ export async function up(knex: Knex) {
     .createTable(ETableNames.votos, (table) => {
       table.bigIncrements("id").primary();
       table
-        .bigInteger("sessaoId")
+        .bigInteger("pautaId")
         .unsigned()
         .notNullable()
         .references("id")

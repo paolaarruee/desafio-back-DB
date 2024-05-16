@@ -6,18 +6,18 @@ import { validation } from "../../shared/middlewares";
 import { SessaoVotacaoProvider } from "../../database/providers/SessaoVotacao";
 
 interface IParamProps {
-  id?: number;
+  pautaId?: number;
 }
 export const deleteByIdValidation = validation((getSchema) => ({
   params: getSchema<IParamProps>(
     yup.object().shape({
-      id: yup.number().integer().required().moreThan(0),
+      pautaId: yup.number().integer().required().moreThan(0),
     })
   ),
 }));
 
 export const deleteById = async (req: Request<IParamProps>, res: Response) => {
-  if (!req.params.id) {
+  if (!req.params.pautaId) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       errors: {
         default: 'O parâmetro "id" precisa ser informado.',
@@ -25,7 +25,7 @@ export const deleteById = async (req: Request<IParamProps>, res: Response) => {
     });
   }
 
-  const sessao = await SessaoVotacaoProvider.deleteById(req.params.id);
+  const sessao = await SessaoVotacaoProvider.deleteById(req.params.pautaId);
   if (sessao instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       error: { default: "Sessao não encontrada" },

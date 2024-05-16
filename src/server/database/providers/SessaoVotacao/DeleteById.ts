@@ -2,10 +2,10 @@ import { ETableNames } from '../../ETableNames';
 import { Knex } from '../../knex';
 
 
-export const deleteById = async (id: number): Promise<void | Error> => {
+export const deleteById = async (pautaId: number): Promise<void | Error> => {
   try {
     const result = await Knex(ETableNames.sessaoVotacao)
-      .where('id', '=', id)
+      .where('pautaId', '=', pautaId)
       .del();
 
     if (result > 0) return;

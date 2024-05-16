@@ -18,38 +18,38 @@ router.get("/", (_, res) => {
 
 router.get(
   "/pautas",
-  ensureAuthenticated,
+  // ensureAuthenticated,
   PautasController.getAllValidation,
   PautasController.getAll
 );
 
 router.post(
   "/pauta",
-  ensureAuthenticated,
-  verifyAdmin,
+  // ensureAuthenticated,
+  // verifyAdmin,
   PautasController.createValidation,
   PautasController.create
 );
 
 router.get(
   "/pauta/:id",
-  ensureAuthenticated,
-  verifyAdmin,
+  // ensureAuthenticated,
+  // verifyAdmin,
   PautasController.getByIdValidation,
   PautasController.getById
 );
 
 router.put(
   "/pauta/:id",
-  ensureAuthenticated,
-  verifyAdmin,
+  // ensureAuthenticated,
+  // verifyAdmin,
   PautasController.updateByIdValidation,
   PautasController.updateById
 );
 
 router.delete(
   "/pauta/:id",
-  ensureAuthenticated,
+  // ensureAuthenticated,
   PautasController.deleteByIdValidation,
   PautasController.deleteById
 );
@@ -57,38 +57,38 @@ router.delete(
 //routes sessoes
 router.get(
   "/sessoes",
-  ensureAuthenticated,
+  // ensureAuthenticated,
   SessoesController.getAllValidation,
   SessoesController.getAll
 );
 
 router.get(
-  "/sessao/:id",
-  ensureAuthenticated,
+  "/sessao/:pautaId",
+  // ensureAuthenticated,
   SessoesController.getByIdValidation,
   SessoesController.getById
 );
 
 router.put(
-  "/sessao/:id",
-  verifyAdmin,
-  ensureAuthenticated,
+  "/sessao/:pautaId",
+  // verifyAdmin,
+  // ensureAuthenticated,
   SessoesController.updateByIdValidation,
   SessoesController.updateById
 );
 
 router.delete(
-  "/sessao/:id",
-  ensureAuthenticated,
-  verifyAdmin,
+  "/sessao/:pautaId",
+  // ensureAuthenticated,
+  // verifyAdmin,
   SessoesController.deleteByIdValidation,
   SessoesController.deleteById
 );
 
 router.post(
   "/sessao/:pautaId",
-  ensureAuthenticated,
-  verifyAdmin,
+  // ensureAuthenticated,
+  // verifyAdmin,
   SessoesController.createValidation,
   SessoesController.create
 );
@@ -96,15 +96,15 @@ router.post(
 // routes votos
 
 router.post(
-  "/voto/:sessaoId",
-  ensureAuthenticated,
+  "/voto/:id",
+  // ensureAuthenticated,
   VotosController.createValidation,
   VotosController.create
 );
 
 router.get(
   "/votos",
-  ensureAuthenticated,
+  // ensureAuthenticated,
   VotosController.getAllValidation,
   VotosController.getAll
 );
@@ -113,7 +113,7 @@ router.get(
 
 router.get(
   "/usuarios",
-  ensureAuthenticated,
+  // ensureAuthenticated,
   UsuariosController.getAllValidation,
   UsuariosController.getAll
 );
@@ -128,21 +128,21 @@ router.post("/entrar", UsuariosController.signIn, UsuariosController.create);
 
 router.get(
   "/usuario/:cpf",
-  ensureAuthenticated,
+  // ensureAuthenticated,
   UsuariosController.getByCpfValidation,
   UsuariosController.getByCpf
 );
 
 router.put(
   "/usuario/:id",
-  ensureAuthenticated,
+  // ensureAuthenticated,
   UsuariosController.updateByIdValidation,
   UsuariosController.updateById
 );
 
 router.delete(
   "/usuario/:id",
-  ensureAuthenticated,
+  // ensureAuthenticated,
   UsuariosController.deleteByIdValidation,
   UsuariosController.deleteById
 );
