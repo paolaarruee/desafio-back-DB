@@ -18,101 +18,91 @@ export const createValidation = validation((getSchema) => ({
   ),
 }));
 
-// const hasUserVotedInSession = async (
-//   pautaId: number,
-//   userCpf: string
-// ): Promise<boolean | Error> => {
-//   try {
-//     const votos = await VotosProvider.getByCpf(userCpf);
+const hasUserVotedInSession = async (
+  pautaId: number,
+  userCpf: string
+): Promise<boolean | Error> => {
+  try {
+    const votos = await VotosProvider.getByCpf(userCpf);
 
-//     if (!Array.isArray(votos)) {
-//       throw new Error("Erro ao recuperar os votos do usuário");
-//     }
+    if (!Array.isArray(votos)) {
+      throw new Error("Erro ao recuperar os votos do usuário");
+    }
 
-//     return votos.some((voto) => voto.pautaId === pautaId);
-//   } catch (error) {
-//     console.error("Erro ao verificar se o usuário já votou na sessão:", error);
-//     return new Error("Erro ao verificar se o usuário já votou na sessão");
-//   }
-// };
+    return votos.some((voto) => voto.pautaId === pautaId);
+  } catch (error) {
+    console.error("Erro ao verificar se o usuário já votou na sessão:", error);
+    return new Error("Erro ao verificar se o usuário já votou na sessão");
+  }
+};
 
 export const create = async (
-  req: Request<{ pautaId: string }, {}, IVoto>,
+  req: Request<{ sessaoId: string }, {}, IVoto>,
   res: Response
 ) => {
-  const { pautaId } = req.params;
+  const { sessaoId } = req.params;
   const { body } = req;
 
   try {
-    // const token = req.headers.authorization?.split(" ")[1];
-    // if (!token) {
-    //   return res.status(StatusCodes.UNAUTHORIZED).json({
-    //     error: "Token de autenticação não fornecido.",
-    //   });
-    // }
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        error: "Token de autenticação não fornecido.",
+      });
+    }
 
-    // const jwtData = JWTService.verify(token);
-    // if (jwtData === "JWT_SECRET_NOT_FOUND" || jwtData === "INVALID_TOKEN") {
-    //   return res.status(StatusCodes.UNAUTHORIZED).json({
-    //     error: "Token inválido.",
-    //   });
-    // }
+    const jwtData = JWTService.verify(token);
+    if (jwtData === "JWT_SECRET_NOT_FOUND" || jwtData === "INVALID_TOKEN") {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        error: "Token inválido.",
+      });
+    }
 
-    // const userCpf = jwtData.cpf;
-    // const hasVoted = await hasUserVotedInSession(parseInt(pautaId), userCpf);
-    // if (hasVoted) {
-    //   return res.status(StatusCodes.BAD_REQUEST).json({
-    //     error: "Você já votou nesta sessão.",
-    //   });
-    // }
+    const userCpf = jwtData.cpf;
+    const hasVoted = await hasUserVotedInSession(parseInt(sessaoId), userCpf);
+    if (hasVoted) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: "Você já votou nesta sessão.",
+      });
+    }
 
-    // const pautaIdNumber = parseInt(pautaId, 10);
-    // console.log(pautaIdNumber);
-    // if (isNaN(pautaIdNumber)) {
-    //   return res.status(StatusCodes.BAD_REQUEST).json({
-    //     error: "O ID da pauta não é um número válido.",
-    //   });
-    // }
+    const sessao = await SessaoVotacaoProvider.getById(parseInt(sessaoId));
+    if (!sessao) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        error: "Sessão não encontrada",
+      });
+    }
 
-    // const sessao = await SessaoVotacaoProvider.getById(parseInt(pautaId));
-    // if (!sessao) {
-    //   return res.status(StatusCodes.NOT_FOUND).json({
-    //     error: "Sessão não encontrada",
-    //   });
-    // }
+    if (!("dataTermino" in sessao)) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: "A sessão de votação não possui data de término definida.",
+      });
+    }
 
-    // sessao;
+    if (sessao.dataTermino === undefined) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: "A sessão de votação não possui data de término definida.",
+      });
+    }
 
-    // if (!("dataTermino" in sessao)) {
-    //   return res.status(StatusCodes.BAD_REQUEST).json({
-    //     error: "A sessão de votação não possui data de término definida.",
-    //   });
-    // }
-
-    // if (sessao.dataTermino === undefined) {
-    //   return res.status(StatusCodes.BAD_REQUEST).json({
-    //     error: "A sessão de votação não possui data de término definida.",
-    //   });
-    // }
-
-    // const agora = new Date();
-    // if (agora > sessao.dataTermino) {
-    //   return res.status(StatusCodes.BAD_REQUEST).json({
-    //     error: "A sessão de votação já expirou e não pode mais receber votos.",
-    //   });
-    // }
+    const agora = new Date();
+    if (agora > sessao.dataTermino) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: "A sessão de votação já expirou e não pode mais receber votos.",
+      });
+    }
 
     const newBody = {
       ...body,
-      pautaId: parseInt(pautaId),
-      // userCpf: userCpf,
+      sessaoId: parseInt(sessaoId),
+      userCpf: userCpf,
     };
 
     const result = await VotosProvider.create(newBody);
 
     if (result) {
       const currentSession = await SessaoVotacaoProvider.getById(
-        parseInt(pautaId)
+        parseInt(sessaoId)
       );
 
       if (
@@ -123,7 +113,7 @@ export const create = async (
         const updatedVotos = (currentSession.votos ?? 0) + 1;
 
         const updatedSessao = await SessaoVotacaoProvider.updateById(
-          parseInt(pautaId),
+          parseInt(sessaoId),
           {
             votos: updatedVotos,
           } as Omit<ISessaoDeVotacao, "id" | "duracaoMinutos">

@@ -9,7 +9,7 @@ export async function up(knex: Knex) {
         .bigInteger("pautaId")
         .unsigned()
         .notNullable()
-        .references("id")
+        .references("pautaId")
         .inTable(ETableNames.sessaoVotacao);
 
         table
