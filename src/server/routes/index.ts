@@ -18,7 +18,6 @@ router.get("/", (_, res) => {
 
 router.get(
   "/pautas",
-  ensureAuthenticated,
   PautasController.getAllValidation,
   PautasController.getAll
 );
@@ -57,21 +56,18 @@ router.delete(
 //routes sessoes
 router.get(
   "/sessoes",
-  ensureAuthenticated,
   SessoesController.getAllValidation,
   SessoesController.getAll
 );
 
 router.get(
   "/sessao/:pautaId",
-  ensureAuthenticated,
   SessoesController.getByIdValidation,
   SessoesController.getById
 );
 
 router.put(
   "/sessao/:pautaId",
-  verifyAdmin,
   ensureAuthenticated,
   SessoesController.updateByIdValidation,
   SessoesController.updateById

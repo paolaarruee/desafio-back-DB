@@ -8,10 +8,10 @@ export const create = async (
   try {
     const [result] = await Knex(ETableNames.votos)
       .insert(votos)
-      .returning("id");
+      .returning("pautaId");
 
     if (typeof result === "object") {
-      return result.id;
+      return result.pautaId;
     } else if (typeof result === "number") {
       return result;
     }

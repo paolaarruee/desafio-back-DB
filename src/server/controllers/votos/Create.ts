@@ -37,10 +37,10 @@ const hasUserVotedInSession = async (
 };
 
 export const create = async (
-  req: Request<{ sessaoId: string }, {}, IVoto>,
+  req: Request<{ pautaId: string }, {}, IVoto>,
   res: Response
 ) => {
-  const { sessaoId } = req.params;
+  const { pautaId } = req.params;
   const { body } = req;
 
   try {
@@ -59,14 +59,14 @@ export const create = async (
     }
 
     const userCpf = jwtData.cpf;
-    const hasVoted = await hasUserVotedInSession(parseInt(sessaoId), userCpf);
+    const hasVoted = await hasUserVotedInSession(parseInt(pautaId), userCpf);
     if (hasVoted) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         error: "Você já votou nesta sessão.",
       });
     }
 
-    const sessao = await SessaoVotacaoProvider.getById(parseInt(sessaoId));
+    const sessao = await SessaoVotacaoProvider.getById(parseInt(pautaId));
     if (!sessao) {
       return res.status(StatusCodes.NOT_FOUND).json({
         error: "Sessão não encontrada",
@@ -94,7 +94,7 @@ export const create = async (
 
     const newBody = {
       ...body,
-      sessaoId: parseInt(sessaoId),
+      pautaId: parseInt(pautaId),
       userCpf: userCpf,
     };
 
@@ -102,7 +102,7 @@ export const create = async (
 
     if (result) {
       const currentSession = await SessaoVotacaoProvider.getById(
-        parseInt(sessaoId)
+        parseInt(pautaId)
       );
 
       if (
@@ -113,7 +113,7 @@ export const create = async (
         const updatedVotos = (currentSession.votos ?? 0) + 1;
 
         const updatedSessao = await SessaoVotacaoProvider.updateById(
-          parseInt(sessaoId),
+          parseInt(pautaId),
           {
             votos: updatedVotos,
           } as Omit<ISessaoDeVotacao, "id" | "duracaoMinutos">

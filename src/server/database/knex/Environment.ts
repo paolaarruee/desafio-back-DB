@@ -21,7 +21,8 @@ async function createDatabase() {
     await knexInstance.destroy();
   }
 }
-createDatabase();
+
+(async () => await createDatabase())();
 
 export const development: Knex.Config = {
   client: "mysql2",
@@ -39,21 +40,20 @@ export const development: Knex.Config = {
   },
 };
 
-
 export const test: Knex.Config = {
-  client: 'sqlite3',
+  client: "sqlite3",
   useNullAsDefault: true,
-  connection: ':memory:',
+  connection: ":memory:",
   migrations: {
-    directory: path.resolve(__dirname, '..', 'migrations'),
+    directory: path.resolve(__dirname, "..", "migrations"),
   },
   seeds: {
-    directory: path.resolve(__dirname, '..', 'seeds'),
+    directory: path.resolve(__dirname, "..", "seeds"),
   },
   pool: {
     afterCreate: (connection: any, done: Function) => {
-      connection.run('PRAGMA foreign_keys = ON');
+      connection.run("PRAGMA foreign_keys = ON");
       done();
-    }
-  }
+    },
+  },
 };
