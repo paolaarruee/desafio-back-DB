@@ -21,6 +21,7 @@ export async function up(knex: Knex) {
       table.integer("duracaoMinutos").notNullable();
 
       table.string("nomeSessao").notNullable();
+      table.string("categoria").notNullable();
 
       table.comment(
         "Tabela usada para armazenar as sessões das pautas no sistema."

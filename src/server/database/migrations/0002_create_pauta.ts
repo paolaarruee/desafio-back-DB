@@ -8,6 +8,7 @@ export async function up(knex: Knex) {
       table.bigIncrements("id").primary().index();
       table.string('titulo', 150).checkLength('<=', 150).index().notNullable();
       table.string('descricao', 300).checkLength('<=', 300).index().notNullable();
+      table.string('categoria', 100).checkLength('<=', 100).index().notNullable();
 
       table.comment("Tabela usada para armazenar pautas no sistema.");
     })

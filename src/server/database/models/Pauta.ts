@@ -5,4 +5,5 @@ export interface IPauta {
   titulo: string;
   descricao: string;
   votos?: IVoto[];
+  categoria: string;
 }

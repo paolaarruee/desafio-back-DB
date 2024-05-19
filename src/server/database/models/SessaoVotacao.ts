@@ -8,4 +8,5 @@ export interface ISessaoDeVotacao {
   duracaoMinutos?: number;
   votos?: number;
   dataTermino?: Date;
+  categoria: string;
 }

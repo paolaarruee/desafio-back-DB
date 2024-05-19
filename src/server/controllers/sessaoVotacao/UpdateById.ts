@@ -20,6 +20,7 @@ export const updateByIdValidation = validation((getSchema) => ({
       dataInicio: yup.date().required(),
       nomeSessao: yup.string().required(),
       duracaoMinutos: yup.number(),
+      categoria: yup.string().required().min(5).max(100),
     })
   ),
   params: getSchema<IParamProps>(
